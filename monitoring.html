@@ -48,47 +48,49 @@
             background-color: var(--bg-card);
             border: 1px solid var(--border-color);
             border-radius: 8px;
-            padding: 20px;
+            padding: 24px;
             margin-bottom: 24px;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-        .status-section { display: flex; align-items: center; }
-        .status-section:not(:last-child) { border-right: 1px solid var(--border-color); padding-right: 24px; margin-right: 24px; }
+        .status-section { display: flex; align-items: center; flex: 1; }
+        .status-section:not(:last-child) { border-right: 1px solid var(--border-color); padding-right: 32px; margin-right: 32px; }
         .status-dot-capturing {
-            width: 10px; height: 10px; background-color: var(--accent-red); border-radius: 50%;
+            width: 8px; height: 8px; background-color: var(--accent-red); border-radius: 50%;
             box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
             animation: pulse-red 2s infinite;
             margin-right: 12px;
+            flex-shrink: 0;
         }
         @keyframes pulse-red {
             0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
             70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
             100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
         }
-        .status-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px; }
-        .status-value { font-size: 20px; font-weight: 700; color: var(--text-primary); }
-        .status-sub { font-size: 12px; color: var(--accent-green); }
-        .session-info { margin-left: 12px; }
-        .session-name { font-size: 14px; color: var(--accent-cyan); font-weight: 600; display: flex; align-items: center; }
-        .session-name i { margin-right: 6px; }
-        .session-table { font-size: 12px; color: var(--text-secondary); font-family: monospace; margin-top: 4px; }
+        .status-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px; letter-spacing: 0.5px; }
+        .status-value { font-size: 18px; font-weight: 700; color: var(--text-primary); line-height: 1.2; }
+        .status-sub { font-size: 11px; color: var(--accent-green); margin-top: 2px; }
+        .session-info { }
+        .session-name { font-size: 12px; color: var(--accent-cyan); font-weight: 600; display: flex; align-items: center; }
+        .session-name i { margin-right: 6px; font-size: 10px; }
+        .session-table { font-size: 11px; color: var(--text-secondary); font-family: monospace; margin-top: 2px; }
         .btn-live-view {
             background-color: var(--accent-red);
             color: #fff;
             border: none;
             border-radius: 6px;
-            padding: 8px 20px;
+            padding: 8px 16px;
             font-weight: 600;
-            font-size: 13px;
+            font-size: 12px;
             margin-top: 8px;
-            width: 100%;
+            display: inline-flex;
+            align-items: center;
         }
         .btn-live-view:hover { background-color: #dc2626; color: #fff; }
-        .packets-count { text-align: right; }
-        .packets-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px; }
-        .packets-value { font-size: 28px; font-weight: 700; color: var(--text-primary); }
+        .packets-count { text-align: right; flex-shrink: 0; }
+        .packets-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px; letter-spacing: 0.5px; }
+        .packets-value { font-size: 24px; font-weight: 700; color: var(--text-primary); font-family: 'Montserrat', sans-serif; }
 
         /* Sessions Table */
         .sessions-card {
@@ -133,26 +135,27 @@
             font-weight: 600;
         }
         .btn-process:hover { background-color: #2563eb; color: #fff; }
-        .btn-view {
-            background-color: rgba(6, 182, 212, 0.15);
+        .btn-action-group { display: inline-flex; gap: 4px; }
+        .btn-icon {
+            width: 32px; height: 28px;
+            display: inline-flex; align-items: center; justify-content: center;
+            border-radius: 6px;
+            font-size: 12px;
+            border: 1px solid;
+            background: transparent;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-icon-view {
             color: var(--accent-cyan);
-            border: 1px solid rgba(6, 182, 212, 0.3);
-            border-radius: 6px;
-            padding: 6px 14px;
-            font-size: 12px;
-            font-weight: 600;
+            border-color: rgba(6, 182, 212, 0.3);
         }
-        .btn-view:hover { background-color: var(--accent-cyan); color: #fff; }
-        .btn-export {
-            background-color: rgba(16, 185, 129, 0.15);
+        .btn-icon-view:hover { background-color: var(--accent-cyan); color: #fff; }
+        .btn-icon-export {
             color: var(--accent-green);
-            border: 1px solid rgba(16, 185, 129, 0.3);
-            border-radius: 6px;
-            padding: 6px 14px;
-            font-size: 12px;
-            font-weight: 600;
+            border-color: rgba(16, 185, 129, 0.3);
         }
-        .btn-export:hover { background-color: var(--accent-green); color: #fff; }
+        .btn-icon-export:hover { background-color: var(--accent-green); color: #fff; }
         .session-icon {
             width: 36px; height: 36px; border-radius: 50%; background-color: #2d2e3a;
             display: inline-flex; align-items: center; justify-content: center; margin-right: 12px;
@@ -203,7 +206,7 @@
             <div class="container-fluid px-4">
                 <!-- Status Card -->
                 <div class="status-card">
-                    <div class="status-section">
+                    <div class="status-section" style="flex: 0 0 auto;">
                         <div>
                             <div class="status-label">Current Status</div>
                             <div class="d-flex align-items-center">
@@ -215,17 +218,15 @@
                             </div>
                         </div>
                     </div>
-                    <div class="status-section">
+                    <div class="status-section" style="flex: 1; margin-left: 32px;">
                         <div>
                             <div class="status-label">Active Session</div>
-                            <div class="session-info">
-                                <div class="session-name"><i class="fas fa-network-wired"></i> ETHERNET</div>
-                                <div class="session-table">log_ethernet_20260409_110235</div>
-                            </div>
+                            <div class="session-name"><i class="fas fa-network-wired"></i> ETHERNET</div>
+                            <div class="session-table">log_ethernet_20260409_110235</div>
+                            <button class="btn-live-view"><i class="fas fa-eye me-2"></i>LIVE VIEW</button>
                         </div>
-                        <button class="btn-live-view"><i class="fas fa-eye me-2"></i>LIVE VIEW</button>
                     </div>
-                    <div class="status-section" style="border-right: none;">
+                    <div class="status-section" style="flex: 0 0 auto; border-right: none; margin-left: 32px; justify-content: flex-end;">
                         <div class="packets-count">
                             <div class="packets-label">Packets Captured</div>
                             <div class="packets-value" id="packet-counter">11,767,809</div>
@@ -299,8 +300,10 @@
                                     <td class="font-monospace" style="font-size: 12px; color: var(--text-secondary);">log_ethernet_20260406_073015</td>
                                     <td class="fw-bold" style="font-size: 16px;">45,892,150</td>
                                     <td class="text-end">
-                                        <a href="session-detail.html" class="btn-view me-1"><i class="fas fa-eye me-1"></i>View</a>
-                                        <button class="btn-export"><i class="fas fa-file-excel me-1"></i>Export</button>
+                                        <div class="btn-action-group">
+                                            <a href="session-detail.html" class="btn-icon btn-icon-view" title="View"><i class="fas fa-eye"></i></a>
+                                            <button class="btn-icon btn-icon-export" title="Export"><i class="fas fa-file-excel"></i></button>
+                                        </div>
                                     </td>
                                 </tr>
                                 <tr>
@@ -318,8 +321,10 @@
                                     <td class="font-monospace" style="font-size: 12px; color: var(--text-secondary);">log_ethernet_20260405_073022</td>
                                     <td class="fw-bold" style="font-size: 16px;">38,214,680</td>
                                     <td class="text-end">
-                                        <a href="session-detail.html" class="btn-view me-1"><i class="fas fa-eye me-1"></i>View</a>
-                                        <button class="btn-export"><i class="fas fa-file-excel me-1"></i>Export</button>
+                                        <div class="btn-action-group">
+                                            <a href="session-detail.html" class="btn-icon btn-icon-view" title="View"><i class="fas fa-eye"></i></a>
+                                            <button class="btn-icon btn-icon-export" title="Export"><i class="fas fa-file-excel"></i></button>
+                                        </div>
                                     </td>
                                 </tr>
                                 <tr>
@@ -337,8 +342,10 @@
                                     <td class="font-monospace" style="font-size: 12px; color: var(--text-secondary);">log_ethernet_20260404_073008</td>
                                     <td class="fw-bold" style="font-size: 16px;">52,103,420</td>
                                     <td class="text-end">
-                                        <a href="session-detail.html" class="btn-view me-1"><i class="fas fa-eye me-1"></i>View</a>
-                                        <button class="btn-export"><i class="fas fa-file-excel me-1"></i>Export</button>
+                                        <div class="btn-action-group">
+                                            <a href="session-detail.html" class="btn-icon btn-icon-view" title="View"><i class="fas fa-eye"></i></a>
+                                            <button class="btn-icon btn-icon-export" title="Export"><i class="fas fa-file-excel"></i></button>
+                                        </div>
                                     </td>
                                 </tr>
                             </tbody>
