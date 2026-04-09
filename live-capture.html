@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IRA Monitoring Network - Live Capture</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { background-color: #15161d; color: #e0e0e0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; overflow-x: hidden; }
+        #sidebar-wrapper { width: 250px; height: 100vh; background-color: #2b2d3b; border-right: 1px solid #383a4a; position: fixed; top: 0; left: 0; z-index: 10000; overflow-y: auto; box-shadow: 4px 0 15px rgba(0,0,0,0.5); transform: translateX(-100%); transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); }
+        #wrapper.toggled #sidebar-wrapper { transform: translateX(0); }
+        .sidebar-category-header { color: #6c757d; font-size: 0.70rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; padding: 1.5rem 1.5rem 0.5rem 1.5rem; font-family: 'Montserrat', sans-serif; }
+        .list-group-item { background-color: transparent; color: #aeb4c1; border: none; padding: 12px 25px; font-size: 14px; transition: background-color 0.2s, color 0.2s; display: flex; align-items: center; text-decoration: none; }
+        .list-group-item:hover { background-color: #383a4a; color: #ffffff; cursor: pointer; }
+        .list-group-item.active { background-color: #15161d; color: #fff; border-left: 4px solid #d9534f; font-weight: 600; }
+        .list-group-item i { margin-right: 12px; width: 20px; text-align: center; font-size: 1.1em; }
+        #page-content-wrapper { width: 100%; margin-left: 0; min-height: 100vh; transition: margin-left 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); }
+        #wrapper.toggled #page-content-wrapper { margin-left: 250px; }
+        #main-navbar { background-color: rgba(21, 22, 29, 0.95); backdrop-filter: blur(10px); border-bottom: 1px solid #2d303e; position: fixed; top: 0; right: 0; left: 0; z-index: 999; padding: 10px 20px; transition: left 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), top 0.3s ease; }
+        #wrapper.toggled #main-navbar { left: 250px; }
+        .navbar-hidden { top: -80px !important; }
+        .content-spacer { height: 70px; }
+        #menu-toggle { background: transparent; border: none; color: #fff; font-size: 1.4rem; margin-right: 15px; padding: 5px 10px; cursor: pointer; z-index: 1001; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #15161d; }
+        ::-webkit-scrollbar-thumb { background: #383a4a; border-radius: 4px; }
+        @media (max-width: 768px) { .navbar-text-desktop, .navbar-clock-desktop { display: none !important; } #wrapper.toggled #page-content-wrapper { margin-left: 0 !important; } #wrapper.toggled #main-navbar { left: 0 !important; } }
+        .stat-card { background-color: #191b21; border: 1px solid #333; border-radius: 8px; padding: 15px; }
+        .stat-title { color: #888; font-size: 11px; text-transform: uppercase; }
+        .stat-value { color: #fff; font-size: 24px; font-weight: bold; }
+        .packet-table { background-color: #191b21; border: 1px solid #333; border-radius: 8px; }
+        .packet-table th { background-color: #202229; color: #787f8a; font-size: 11px; text-transform: uppercase; position: sticky; top: 0; z-index: 2; }
+        .packet-table td { background-color: transparent; border-bottom: 1px solid #2d303e; font-size: 12px; font-family: monospace; }
+        .proto-tcp { color: #28a745; }
+        .proto-udp { color: #ffc107; }
+        .proto-tls { color: #d9534f; }
+        .proto-http { color: #17a2b8; }
+        .live-pulse { width: 10px; height: 10px; background-color: #dc3545; border-radius: 50%; box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7); animation: pulse-red 2s infinite; }
+        @keyframes pulse-red { 0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7); } 70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(220, 53, 69, 0); } 100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(220, 53, 69, 0); } }
+    </style>
+</head>
+<body>
+    <div id="wrapper">
+        <div id="sidebar-wrapper">
+            <div class="sidebar-brand-wrapper" style="background-color: #2b2d3b; padding: 25px 10px; text-align: center; border-bottom: 1px solid #383a4a;">
+                <a href="index.html" style="text-decoration: none; display: flex; flex-direction: column; align-items: center;">
+                    <img src="Images/logo-ira.png" alt="IRA Logo" style="height: 55px; width: auto; margin-bottom: 10px;">
+                    <div class="brand-text" style="font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 10px; line-height: 1.4; letter-spacing: 0.5px; color: #ffffff; text-transform: uppercase;">Industrial Robotic<br>Automation</div>
+                </a>
+            </div>
+            <div class="list-group list-group-flush pb-4">
+                <div class="sidebar-category-header">DASHBOARD</div>
+                <a href="index.html" class="list-group-item list-group-item-action"><i class="fas fa-th-large"></i> Main Panel</a>
+                <div class="sidebar-category-header">TRAFFIC ANALYSIS</div>
+                <a href="live-capture.html" class="list-group-item list-group-item-action active"><i class="fas fa-satellite-dish"></i> Live Capture</a>
+                <a href="monitoring.html" class="list-group-item list-group-item-action"><i class="fas fa-history"></i> Session Logs</a>
+                <div class="sidebar-category-header">INVENTORY & ASSETS</div>
+                <a href="management.html" class="list-group-item list-group-item-action"><i class="fas fa-network-wired"></i> Device Mapping</a>
+                <div class="sidebar-category-header">SYSTEM</div>
+                <a href="#" class="list-group-item list-group-item-action"><i class="fas fa-cog"></i> Configuration</a>
+                <div style="height: 50px;"></div>
+            </div>
+        </div>
+        <div id="page-content-wrapper">
+            <nav id="main-navbar" class="navbar navbar-dark d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center">
+                    <button id="menu-toggle"><i class="fas fa-bars"></i></button>
+                    <div class="navbar-text-desktop">
+                        <span class="text-muted small d-block" style="font-size: 11px; margin-bottom: -2px;">Traffic Analysis</span>
+                        <span class="text-white fw-bold" style="font-size: 18px;">Live Capture</span>
+                    </div>
+                    <div class="d-md-none text-white fw-bold ms-2" style="font-size: 16px;">IRA Monitoring Network</div>
+                </div>
+                <div class="d-flex align-items-center">
+                     <span class="navbar-clock-desktop text-muted small me-3"><i class="far fa-clock me-1"></i> <span id="clock"></span></span>
+                     <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center text-white" style="width: 35px; height: 35px; font-size: 14px;">AD</div>
+                </div>
+            </nav>
+            <div class="content-spacer"></div>
+            <div class="container-fluid px-4">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="alert alert-info bg-dark border-info text-info mb-4">
+                            <i class="fas fa-info-circle me-2"></i>
+                            <strong>Session:</strong> log_eth_20260409_073000 | 
+                            <strong>Interface:</strong> eth0 | 
+                            <strong>Status:</strong> <span class="live-pulse d-inline-block me-2"></span><strong>LIVE CAPTURING</strong>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-4">
+                    <div class="col-md-3">
+                        <div class="stat-card text-center">
+                            <div class="stat-title">Total Packets</div>
+                            <div class="stat-value">2,520,000</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-card text-center">
+                            <div class="stat-title">Total Volume</div>
+                            <div class="stat-value">1.2 GB</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-card text-center">
+                            <div class="stat-title">Capture Rate</div>
+                            <div class="stat-value">12.5K/s</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-card text-center">
+                            <div class="stat-title">Duration</div>
+                            <div class="stat-value">04:07:22</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card packet-table">
+                            <div class="card-header bg-dark border-secondary">
+                                <h6 class="m-0 text-white"><i class="fas fa-stream me-2 text-primary"></i>Packet Stream</h6>
+                            </div>
+                            <div class="table-responsive" style="max-height: 500px; overflow-y: auto;">
+                                <table class="table table-dark mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th>Time</th>
+                                            <th>Source</th>
+                                            <th>Destination</th>
+                                            <th>Protocol</th>
+                                            <th>Length</th>
+                                            <th>Info</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="text-info">11:07:21</td>
+                                            <td class="text-info font-monospace">192.168.3.10</td>
+                                            <td class="text-info font-monospace">192.168.3.73</td>
+                                            <td><span class="badge bg-success">TCP</span></td>
+                                            <td>64</td>
+                                            <td>HTTPS GET /api/stats</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-info">11:07:21</td>
+                                            <td class="text-info font-monospace">192.168.3.73</td>
+                                            <td class="text-info font-monospace">192.168.3.10</td>
+                                            <td><span class="badge bg-success">TCP</span></td>
+                                            <td>54</td>
+                                            <td>HTTPS Response 200 OK</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-info">11:07:21</td>
+                                            <td class="text-info font-monospace">192.168.3.65</td>
+                                            <td class="text-info font-monospace">192.168.3.10</td>
+                                            <td><span class="badge bg-success">TCP</span></td>
+                                            <td>74</td>
+                                            <td>HTTP GET /dashboard</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-info">11:07:21</td>
+                                            <td class="text-info font-monospace">192.168.3.73</td>
+                                            <td class="text-info font-monospace">192.168.3.10</td>
+                                            <td><span class="badge bg-success">TCP</span></td>
+                                            <td>142</td>
+                                            <td>HTTPS POST /api/heartbeat</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-info">11:07:21</td>
+                                            <td class="text-info font-monospace">192.168.3.210</td>
+                                            <td class="text-info font-monospace">142.251.156.119</td>
+                                            <td><span class="badge bg-warning text-dark">UDP</span></td>
+                                            <td>64</td>
+                                            <td>DNS Query youtube.com</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-info">11:07:21</td>
+                                            <td class="text-info font-monospace">192.168.3.210</td>
+                                            <td class="text-info font-monospace">142.251.156.119</td>
+                                            <td><span class="badge bg-warning text-dark">UDP</span></td>
+                                            <td>128</td>
+                                            <td>DNS Response 142.251.156.119</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-info">11:07:21</td>
+                                            <td class="text-info font-monospace">192.168.3.135</td>
+                                            <td class="text-info font-monospace">192.168.3.10</td>
+                                            <td><span class="badge bg-success">TCP</span></td>
+                                            <td>1420</td>
+                                            <td>TLSv1.3 Application Data</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-info">11:07:21</td>
+                                            <td class="text-info font-monospace">192.168.3.65</td>
+                                            <td class="text-info font-monospace">192.168.3.10</td>
+                                            <td><span class="badge bg-success">TCP</span></td>
+                                            <td>158</td>
+                                            <td>HTTP GET /assets/style.css</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-info">11:07:21</td>
+                                            <td class="text-info font-monospace">192.168.3.10</td>
+                                            <td class="text-info font-monospace">192.168.3.135</td>
+                                            <td><span class="badge bg-success">TCP</span></td>
+                                            <td>64</td>
+                                            <td>HTTP 200 OK</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-info">11:07:21</td>
+                                            <td class="text-info font-monospace">192.168.3.119</td>
+                                            <td class="text-info font-monospace">210.210.145.224</td>
+                                            <td><span class="badge bg-success">TCP</span></td>
+                                            <td>892</td>
+                                            <td>RTSP SETUP /stream1</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-info">11:07:21</td>
+                                            <td class="text-info font-monospace">210.210.145.224</td>
+                                            <td class="text-info font-monospace">192.168.3.119</td>
+                                            <td><span class="badge bg-success">TCP</span></td>
+                                            <td>1520</td>
+                                            <td>RTSP Interleaved Data</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-info">11:07:21</td>
+                                            <td class="text-info font-monospace">192.168.3.119</td>
+                                            <td class="text-info font-monospace">210.210.145.224</td>
+                                            <td><span class="badge bg-success">TCP</span></td>
+                                            <td>84</td>
+                                            <td>RTSP TEARDOWN</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-info">11:07:21</td>
+                                            <td class="text-info font-monospace">210.210.145.224</td>
+                                            <td class="text-info font-monospace">192.168.3.119</td>
+                                            <td><span class="badge bg-danger">TLSv1.2</span></td>
+                                            <td>1520</td>
+                                            <td>TLSv1.2 Application Data</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-info">11:07:21</td>
+                                            <td class="text-info font-monospace">192.168.3.119</td>
+                                            <td class="text-info font-monospace">210.210.145.224</td>
+                                            <td><span class="badge bg-success">TCP</span></td>
+                                            <td>892</td>
+                                            <td>HTTPS POST /upload</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-info">11:07:21</td>
+                                            <td class="text-info font-monospace">192.168.3.50</td>
+                                            <td class="text-info font-monospace">192.168.3.10</td>
+                                            <td><span class="badge bg-info">HTTP</span></td>
+                                            <td>256</td>
+                                            <td>HTTP GET /api/devices</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function updateClock() { const now = new Date(); document.getElementById('clock').textContent = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }); }
+        updateClock(); setInterval(updateClock, 60000);
+        const wrapper = document.getElementById("wrapper");
+        const toggleButton = document.getElementById("menu-toggle");
+        const navbar = document.getElementById("main-navbar");
+        const content = document.getElementById("page-content-wrapper");
+        let lastScrollTop = 0;
+        toggleButton.addEventListener("click", function(e) { e.preventDefault(); e.stopPropagation(); wrapper.classList.toggle("toggled"); });
+        content.addEventListener("click", function() { if (window.innerWidth <= 768 && wrapper.classList.contains("toggled")) { wrapper.classList.remove("toggled"); } });
+        window.addEventListener("scroll", function() { let scrollTop = window.pageYOffset || document.documentElement.scrollTop; if (scrollTop > lastScrollTop && scrollTop > 50) navbar.classList.add("navbar-hidden"); else navbar.classList.remove("navbar-hidden"); lastScrollTop = scrollTop; });
+    </script>
+</body>
+</html>
