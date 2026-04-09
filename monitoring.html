@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IRA Monitoring Network - Session Logs</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { background-color: #15161d; color: #e0e0e0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; overflow-x: hidden; }
+        #sidebar-wrapper { width: 250px; height: 100vh; background-color: #2b2d3b; border-right: 1px solid #383a4a; position: fixed; top: 0; left: 0; z-index: 10000; overflow-y: auto; box-shadow: 4px 0 15px rgba(0,0,0,0.5); transform: translateX(-100%); transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); }
+        #wrapper.toggled #sidebar-wrapper { transform: translateX(0); }
+        .sidebar-category-header { color: #6c757d; font-size: 0.70rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; padding: 1.5rem 1.5rem 0.5rem 1.5rem; font-family: 'Montserrat', sans-serif; }
+        .list-group-item { background-color: transparent; color: #aeb4c1; border: none; padding: 12px 25px; font-size: 14px; transition: background-color 0.2s, color 0.2s; display: flex; align-items: center; text-decoration: none; }
+        .list-group-item:hover { background-color: #383a4a; color: #ffffff; cursor: pointer; }
+        .list-group-item.active { background-color: #15161d; color: #fff; border-left: 4px solid #d9534f; font-weight: 600; }
+        .list-group-item i { margin-right: 12px; width: 20px; text-align: center; font-size: 1.1em; }
+        #page-content-wrapper { width: 100%; margin-left: 0; min-height: 100vh; transition: margin-left 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); }
+        #wrapper.toggled #page-content-wrapper { margin-left: 250px; }
+        #main-navbar { background-color: rgba(21, 22, 29, 0.95); backdrop-filter: blur(10px); border-bottom: 1px solid #2d303e; position: fixed; top: 0; right: 0; left: 0; z-index: 999; padding: 10px 20px; transition: left 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), top 0.3s ease; }
+        #wrapper.toggled #main-navbar { left: 250px; }
+        .navbar-hidden { top: -80px !important; }
+        .content-spacer { height: 70px; }
+        #menu-toggle { background: transparent; border: none; color: #fff; font-size: 1.4rem; margin-right: 15px; padding: 5px 10px; cursor: pointer; z-index: 1001; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #15161d; }
+        ::-webkit-scrollbar-thumb { background: #383a4a; border-radius: 4px; }
+        @media (max-width: 768px) { .navbar-text-desktop, .navbar-clock-desktop { display: none !important; } #wrapper.toggled #page-content-wrapper { margin-left: 0 !important; } #wrapper.toggled #main-navbar { left: 0 !important; } }
+        .progress-pulse { background-image: linear-gradient(45deg,rgba(255,255,255,.15) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.15) 50%,rgba(255,255,255,.15) 75%,transparent 75%,transparent); background-size: 1rem 1rem; animation: progress-bar-stripes 1s linear infinite; }
+        @keyframes progress-bar-stripes { 0% { background-position: 1rem 0; } 100% { background-position: 0 0; } }
+        @keyframes loading { 0% { left: -100%; } 50% { left: 100%; } 100% { left: 100%; } }
+        .live-pulse { width: 15px; height: 15px; background-color: #ff3b30; border-radius: 50%; box-shadow: 0 0 0 0 rgba(255, 59, 48, 0.7); animation: pulse-red 2s infinite; }
+        @keyframes pulse-red { 0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 59, 48, 0.7); } 70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(255, 59, 48, 0); } 100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(255, 59, 48, 0); } }
+    </style>
+</head>
+<body>
+    <div id="wrapper">
+        <div id="sidebar-wrapper">
+            <div class="sidebar-brand-wrapper" style="background-color: #2b2d3b; padding: 25px 10px; text-align: center; border-bottom: 1px solid #383a4a;">
+                <a href="index.html" style="text-decoration: none; display: flex; flex-direction: column; align-items: center;">
+                    <img src="Images/logo-ira.png" alt="IRA Logo" style="height: 55px; width: auto; margin-bottom: 10px;">
+                    <div class="brand-text" style="font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 10px; line-height: 1.4; letter-spacing: 0.5px; color: #ffffff; text-transform: uppercase;">Industrial Robotic<br>Automation</div>
+                </a>
+            </div>
+            <div class="list-group list-group-flush pb-4">
+                <div class="sidebar-category-header">DASHBOARD</div>
+                <a href="index.html" class="list-group-item list-group-item-action"><i class="fas fa-th-large"></i> Main Panel</a>
+                <div class="sidebar-category-header">TRAFFIC ANALYSIS</div>
+                <a href="monitoring.html" class="list-group-item list-group-item-action active"><i class="fas fa-satellite-dish"></i> Live Capture</a>
+                <a href="monitoring.html" class="list-group-item list-group-item-action"><i class="fas fa-history"></i> Session Logs</a>
+                <div class="sidebar-category-header">INVENTORY & ASSETS</div>
+                <a href="management.html" class="list-group-item list-group-item-action"><i class="fas fa-network-wired"></i> Device Mapping</a>
+                <div class="sidebar-category-header">SYSTEM</div>
+                <a href="#" class="list-group-item list-group-item-action"><i class="fas fa-cog"></i> Configuration</a>
+                <div style="height: 50px;"></div>
+            </div>
+        </div>
+        <div id="page-content-wrapper">
+            <nav id="main-navbar" class="navbar navbar-dark d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center">
+                    <button id="menu-toggle"><i class="fas fa-bars"></i></button>
+                    <div class="navbar-text-desktop">
+                        <span class="text-muted small d-block" style="font-size: 11px; margin-bottom: -2px;">Traffic Analysis</span>
+                        <span class="text-white fw-bold" style="font-size: 18px;">Session Logs</span>
+                    </div>
+                    <div class="d-md-none text-white fw-bold ms-2" style="font-size: 16px;">IRA Monitoring Network</div>
+                </div>
+                <div class="d-flex align-items-center">
+                     <span class="navbar-clock-desktop text-muted small me-3"><i class="far fa-clock me-1"></i> <span id="clock"></span></span>
+                     <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center text-white" style="width: 35px; height: 35px; font-size: 14px;">AD</div>
+                </div>
+            </nav>
+            <div class="content-spacer"></div>
+            <div class="container-fluid px-4">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card shadow-sm mb-4" style="background-color: #191b21; border: 1px solid #333; position: relative; overflow: hidden;">
+                            <div id="live-indicator-bar" style="height: 3px; width: 100%; background: linear-gradient(90deg, transparent, #00d2ff, transparent); position: absolute; top: 0; left: -100%; animation: loading 2s infinite;"></div>
+                            <div class="card-body p-4">
+                                <div class="row align-items-center">
+                                    <div class="col-md-4 border-end border-secondary" style="border-color: #333 !important;">
+                                        <h6 class="text-uppercase text-secondary mb-3" style="font-size: 11px; letter-spacing: 1px;">Current Status</h6>
+                                        <div class="d-flex align-items-center" id="status-container">
+                                            <div class="rounded-circle bg-secondary me-3" style="width: 15px; height: 15px;"></div>
+                                            <div><h4 class="text-white fw-bold mb-0">IDLE</h4><small class="text-danger">Stopped</small></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 border-end border-secondary ps-md-4" style="border-color: #333 !important;">
+                                        <h6 class="text-uppercase text-secondary mb-3" id="dynamic-session-title" style="font-size: 11px; letter-spacing: 1px;">LAST SESSION</h6>
+                                        <div id="session-info-container"><span class="text-white-50">Waiting for data...</span></div>
+                                        <div id="live-view-btn-container" class="mt-3"></div>
+                                    </div>
+                                    <div class="col-md-4 ps-md-4 text-md-end">
+                                        <h6 class="text-uppercase text-secondary mb-2" style="font-size: 11px; letter-spacing: 1px;">Packets Captured</h6>
+                                        <h2 class="text-white fw-bold mb-0" id="live-packet-count">0</h2>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="my-4"></div>
+                        <div class="card shadow-sm mb-4" style="background-color: #191b21; border: 1px solid #333;">
+                            <div class="card-header py-3 d-flex justify-content-between align-items-center" style="background-color: #202229; border-bottom: 1px solid #2d303e;">
+                                <h6 class="m-0 text-white font-weight-bold"><i class="fas fa-history me-2 text-primary"></i>Recorded Sessions (History)</h6>
+                                <div>
+                                    <div id="normal-actions">
+                                        <button type="button" class="btn btn-sm btn-outline-light"><i class="fas fa-tasks me-1"></i> Manage Sessions</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body p-0">
+                                <div class="table-responsive">
+                                    <table class="table table-dark table-hover mb-0 align-middle">
+                                        <thead style="background-color: #2b2d3b; text-transform: uppercase; font-size: 12px; letter-spacing: 0.5px;">
+                                            <tr style="border-bottom: 2px solid #383a4a;">
+                                                <th class="py-3 px-4 text-secondary">Capture Time</th>
+                                                <th class="py-3 text-secondary">Status</th>
+                                                <th class="py-3 text-secondary">Interface</th>
+                                                <th class="py-3 text-secondary">Table Name</th>
+                                                <th class="py-3 text-center text-secondary">Total Packets</th>
+                                                <th class="py-3 text-end px-4 text-secondary">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="sessions-table-body">
+                                            <tr style="border-bottom: 1px solid #2d303e;">
+                                                <td colspan="6" class="text-center py-5 text-secondary">
+                                                    <i class="fas fa-folder-open fa-3x mb-3 opacity-25"></i>
+                                                    <p class="mb-0">No recorded history sessions found.</p>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function updateClock() { const now = new Date(); document.getElementById('clock').textContent = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }); }
+        updateClock(); setInterval(updateClock, 60000);
+        const wrapper = document.getElementById("wrapper");
+        const toggleButton = document.getElementById("menu-toggle");
+        const navbar = document.getElementById("main-navbar");
+        const content = document.getElementById("page-content-wrapper");
+        let lastScrollTop = 0;
+        toggleButton.addEventListener("click", function(e) { e.preventDefault(); e.stopPropagation(); wrapper.classList.toggle("toggled"); });
+        content.addEventListener("click", function() { if (window.innerWidth <= 768 && wrapper.classList.contains("toggled")) { wrapper.classList.remove("toggled"); } });
+        window.addEventListener("scroll", function() { let scrollTop = window.pageYOffset || document.documentElement.scrollTop; if (scrollTop > lastScrollTop && scrollTop > 50) navbar.classList.add("navbar-hidden"); else navbar.classList.remove("navbar-hidden"); lastScrollTop = scrollTop; });
+    </script>
+</body>
+</html>
