@@ -3,261 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IRA Monitoring Network - Dashboard</title>
+    <title>IRA Monitoring Network - DASHBOARD</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        :root {
-            --bg-primary: #15161d;
-            --bg-card: #1c1d27;
-            --bg-card-hover: #222330;
-            --border-color: #2d2e3a;
-            --text-primary: #ffffff;
-            --text-secondary: #8a8b98;
-            --text-muted: #5a5b68;
-            --accent-blue: #3b82f6;
-            --accent-purple: #8b5cf6;
-            --accent-green: #10b981;
-            --accent-red: #ef4444;
-            --accent-orange: #f59e0b;
-        }
-        * { box-sizing: border-box; }
-        body {
-            background-color: var(--bg-primary);
-            color: var(--text-primary);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            overflow-x: hidden;
-            margin: 0;
-            padding: 0;
-        }
-
-        /* === SIDEBAR === */
-        #sidebar-wrapper {
-            width: 250px;
-            height: 100vh;
-            background-color: #1c1d27;
-            border-right: 1px solid var(--border-color);
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: 10000;
-            overflow-y: auto;
-            transform: translateX(-100%);
-            transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-        }
+        body { background-color: #15161d; color: #e0e0e0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; overflow-x: hidden; }
+        #sidebar-wrapper { width: 250px; height: 100vh; background-color: #2b2d3b; border-right: 1px solid #383a4a; position: fixed; top: 0; left: 0; z-index: 10000; overflow-y: auto; box-shadow: 4px 0 15px rgba(0,0,0,0.5); transform: translateX(-100%); transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); will-change: transform; }
         #wrapper.toggled #sidebar-wrapper { transform: translateX(0); }
-        .sidebar-brand-wrapper {
-            background-color: #1c1d27;
-            padding: 25px 10px;
-            text-align: center;
-            border-bottom: 1px solid var(--border-color);
-        }
-        .sidebar-category-header {
-            color: var(--text-muted);
-            font-size: 0.70rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1.2px;
-            padding: 1.5rem 1.5rem 0.5rem 1.5rem;
-            font-family: 'Montserrat', sans-serif;
-        }
-        .list-group-item {
-            background-color: transparent;
-            color: var(--text-secondary);
-            border: none;
-            padding: 12px 25px;
-            font-size: 14px;
-            transition: background-color 0.2s, color 0.2s;
-            display: flex;
-            align-items: center;
-            text-decoration: none;
-        }
-        .list-group-item:hover { background-color: var(--bg-card-hover); color: var(--text-primary); cursor: pointer; }
-        .list-group-item.active { background-color: var(--bg-primary); color: var(--text-primary); border-left: 4px solid var(--accent-red); font-weight: 600; }
+        .sidebar-category-header { color: #6c757d; font-size: 0.70rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; padding: 1.5rem 1.5rem 0.5rem 1.5rem; font-family: 'Montserrat', sans-serif; }
+        .list-group-item { background-color: transparent; color: #aeb4c1; border: none; padding: 12px 25px; font-size: 14px; transition: background-color 0.2s, color 0.2s; display: flex; align-items: center; text-decoration: none; }
+        .list-group-item:hover { background-color: #383a4a; color: #ffffff; cursor: pointer; }
+        .list-group-item.active { background-color: #15161d; color: #fff; border-left: 4px solid #d9534f; font-weight: 600; }
         .list-group-item i { margin-right: 12px; width: 20px; text-align: center; font-size: 1.1em; }
-
-        /* === CONTENT === */
-        #page-content-wrapper {
-            width: 100%;
-            margin-left: 0;
-            min-height: 100vh;
-            transition: margin-left 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-        }
+        #page-content-wrapper { width: 100%; margin-left: 0; min-height: 100vh; transition: margin-left 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); will-change: margin-left; }
         #wrapper.toggled #page-content-wrapper { margin-left: 250px; }
-
-        /* === NAVBAR === */
-        #main-navbar {
-            background-color: rgba(21, 22, 29, 0.95);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--border-color);
-            position: fixed;
-            top: 0;
-            right: 0;
-            left: 0;
-            z-index: 999;
-            padding: 10px 20px;
-            transition: left 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), top 0.3s ease;
-        }
+        #main-navbar { background-color: rgba(21, 22, 29, 0.95); backdrop-filter: blur(10px); border-bottom: 1px solid #2d303e; position: fixed; top: 0; right: 0; left: 0; z-index: 999; padding: 10px 20px; transition: left 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), top 0.3s ease; will-change: left; }
         #wrapper.toggled #main-navbar { left: 250px; }
-        #menu-toggle { background: transparent; border: none; color: var(--text-primary); font-size: 1.4rem; margin-right: 15px; padding: 5px 10px; cursor: pointer; }
-
-        /* === CARDS === */
-        .dashboard-card {
-            background-color: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-        }
-        .card-header-custom {
-            padding: 15px 20px;
-            border-bottom: 1px solid var(--border-color);
-            background-color: transparent;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .card-title { color: var(--text-primary); font-weight: 700; font-size: 15px; margin: 0; }
-        .card-subtitle { color: var(--text-secondary); font-size: 11px; margin-top: 2px; }
-
-        /* === PERFORMANCE ITEMS === */
-        .perf-item {
-            padding: 12px 16px;
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: relative;
-        }
-        .perf-item:last-child { border-bottom: none; }
-        .perf-item::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            width: 4px;
-        }
-        .perf-cpu::before { background-color: var(--accent-blue); }
-        .perf-ram::before { background-color: var(--accent-purple); }
-        .perf-disk::before { background-color: var(--accent-green); }
-        .perf-gpu::before { background-color: var(--accent-red); }
-        .perf-label { color: var(--text-primary); font-size: 13px; font-weight: 600; display: block; }
-        .perf-value { color: var(--text-primary); font-size: 12px; }
-        .perf-unit { color: var(--text-secondary); font-size: 11px; }
-        .perf-bar-box {
-            height: 24px;
-            width: 40px;
-            background-color: #15161d;
-            border: 1px solid #3d3d3d;
-            border-radius: 3px;
-            display: flex;
-            align-items: flex-end;
-            padding: 2px;
-        }
-        .perf-bar { width: 100%; opacity: 0.7; border-radius: 2px; transition: height 0.5s ease; }
-
-        /* === SERVICE STATUS === */
-        .service-item {
-            padding: 12px 16px;
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .service-item:last-child { border-bottom: none; }
-        .service-icon { width: 20px; margin-right: 10px; text-align: center; }
-        .service-label { color: var(--text-primary); font-size: 13px; font-weight: 600; }
-        .status-running { color: var(--accent-green); font-size: 0.9rem; font-weight: 600; }
-        .status-stopped { color: var(--accent-red); font-size: 0.9rem; font-weight: 600; }
-        .status-dot {
-            display: inline-block;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            margin-right: 5px;
-        }
-        .status-dot.running { background-color: var(--accent-green); }
-        .status-dot.stopped { background-color: var(--accent-red); }
-
-        /* === LIVE BADGE === */
-        .badge-live {
-            background-color: var(--accent-green);
-            color: #fff;
-            font-size: 10px;
-            padding: 3px 8px;
-            border-radius: 4px;
-            font-weight: 600;
-        }
-
-        /* === SERVER TABLE === */
-        .server-table { width: 100%; }
-        .server-table th {
-            background-color: transparent;
-            color: var(--text-secondary);
-            font-size: 11px;
-            text-transform: uppercase;
-            font-weight: 600;
-            padding: 12px 20px;
-            border-bottom: 1px solid var(--border-color);
-        }
-        .server-table td {
-            background-color: transparent;
-            color: var(--text-primary);
-            font-size: 13px;
-            padding: 12px 20px;
-            border-bottom: 1px solid var(--border-color);
-        }
-        .server-table tr:last-child td { border-bottom: none; }
-        .server-icon {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background-color: #2d2e3a;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 12px;
-        }
-        .badge-online {
-            background-color: rgba(16, 185, 129, 0.15);
-            color: var(--accent-green);
-            padding: 4px 12px;
-            border-radius: 4px;
-            font-size: 11px;
-            font-weight: 600;
-        }
-        .signal-bars { display: inline-flex; align-items: flex-end; gap: 2px; height: 16px; }
-        .signal-bar { width: 3px; background-color: var(--accent-green); border-radius: 1px; }
-
-        /* === SCROLLBAR === */
+        .navbar-hidden { top: -80px !important; }
+        .content-spacer { height: 70px; }
+        #menu-toggle { background: transparent; border: none; color: #fff; font-size: 1.4rem; margin-right: 15px; padding: 5px 10px; cursor: pointer; z-index: 1001; }
         ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: var(--bg-primary); }
+        ::-webkit-scrollbar-track { background: #15161d; }
         ::-webkit-scrollbar-thumb { background: #383a4a; border-radius: 4px; }
-
-        /* === RESPONSIVE === */
-        @media (max-width: 768px) {
-            .navbar-text-desktop, .navbar-clock-desktop { display: none !important; }
-            #wrapper.toggled #page-content-wrapper { margin-left: 0 !important; }
-            #wrapper.toggled #main-navbar { left: 0 !important; }
-            #wrapper.toggled #page-content-wrapper::after {
-                content: ""; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-                background: rgba(0,0,0,0.6); z-index: 9999; backdrop-filter: blur(2px);
-            }
-        }
-        .content-spacer { height: 60px; }
+        @media (max-width: 768px) { .navbar-text-desktop, .navbar-clock-desktop { display: none !important; } #wrapper.toggled #page-content-wrapper { margin-left: 0 !important; } #wrapper.toggled #main-navbar { left: 0 !important; } #wrapper.toggled #page-content-wrapper::after { content: ""; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); z-index: 9999; backdrop-filter: blur(2px); } }
+        .tm-widget-card { background-color: #191b21; border: 1px solid #333; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.3); margin-bottom: 20px; transition: all 0.3s ease; }
+        .tm-header { padding: 15px 16px; border-bottom: 1px solid #2d303e; background-color: #202229; }
+        .tm-title { color: #fff; font-weight: 700; font-size: 16px; margin-bottom: 2px; }
+        .tm-subtitle { color: #a0a0a0; font-size: 11px; }
+        .tm-item { padding: 12px 16px; border-bottom: 1px solid #2d303e; position: relative; }
+        .tm-label { color: #e0e0e0; font-size: 13px; font-weight: 600; display: block; }
+        .tm-value { color: #fff; font-size: 13px; }
+        .tm-sub-value { color: #888; font-size: 11px; }
+        .tm-graph-box { height: 30px; width: 50px; background-color: #1e1e2d; border: 1px solid #3d3d3d; position: absolute; right: 16px; top: 12px; display: flex; align-items: flex-end; padding: 1px; }
+        .tm-bar { flex: 1; margin-right: 1px; opacity: 0.7; transition: height 0.5s ease; min-height: 2px; }
+        .accent-cpu { border-left: 4px solid #0078d7; }
+        .accent-ram { border-left: 4px solid #8a2be2; }
+        .accent-disk { border-left: 4px solid #28a745; }
+        .accent-gpu { border-left: 4px solid #d9534f; }
+        .accent-status { border-left: 4px solid #f0ad4e; }
+        .status-dot { height: 10px; width: 10px; border-radius: 50%; display: inline-block; margin-right: 6px; }
+        .chart-wrapper { height: 100%; min-height: 500px; max-height: 600px; }
+        @media (max-width: 991.98px) { .chart-wrapper { height: 400px !important; min-height: auto; } }
+        @media (max-width: 768px) { .col-mobile-hide { display: none !important; } .table { font-size: 11px !important; } .table td, .table th { padding: 8px 5px !important; } .server-icon-box { width: 25px !important; height: 25px !important; margin-right: 8px !important; } .badge { font-size: 9px !important; padding: 3px 5px !important; } }
     </style>
 </head>
 <body>
     <div id="wrapper">
-        <!-- SIDEBAR -->
         <div id="sidebar-wrapper">
-            <div class="sidebar-brand-wrapper">
+            <div class="sidebar-brand-wrapper" style="background-color: #2b2d3b; padding: 25px 10px; text-align: center; border-bottom: 1px solid #383a4a;">
                 <a href="index.html" style="text-decoration: none; display: flex; flex-direction: column; align-items: center;">
                     <img src="Images/logo-ira.png" alt="IRA Logo" style="height: 55px; width: auto; margin-bottom: 10px;">
-                    <div style="font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 10px; line-height: 1.4; letter-spacing: 0.5px; color: #ffffff; text-transform: uppercase;">
+                    <div class="brand-text" style="font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 10px; line-height: 1.4; letter-spacing: 0.5px; color: #ffffff; text-transform: uppercase;">
                         Industrial Robotic<br>Automation
                     </div>
                 </a>
@@ -266,7 +64,7 @@
                 <div class="sidebar-category-header">DASHBOARD</div>
                 <a href="index.html" class="list-group-item list-group-item-action active"><i class="fas fa-th-large"></i> Main Panel</a>
                 <div class="sidebar-category-header">TRAFFIC ANALYSIS</div>
-                <a href="live-capture.html" class="list-group-item list-group-item-action"><i class="fas fa-satellite-dish"></i> Live Capture</a>
+                <a href="monitoring.html" class="list-group-item list-group-item-action"><i class="fas fa-satellite-dish"></i> Live Capture</a>
                 <a href="monitoring.html" class="list-group-item list-group-item-action"><i class="fas fa-history"></i> Session Logs</a>
                 <div class="sidebar-category-header">INVENTORY & ASSETS</div>
                 <a href="management.html" class="list-group-item list-group-item-action"><i class="fas fa-network-wired"></i> Device Mapping</a>
@@ -275,164 +73,106 @@
                 <div style="height: 50px;"></div>
             </div>
         </div>
-
-        <!-- CONTENT -->
         <div id="page-content-wrapper">
             <nav id="main-navbar" class="navbar navbar-dark d-flex justify-content-between align-items-center">
                 <div class="d-flex align-items-center">
                     <button id="menu-toggle"><i class="fas fa-bars"></i></button>
                     <div class="navbar-text-desktop">
                         <span class="text-muted small d-block" style="font-size: 11px; margin-bottom: -2px;">IRA - Network Management</span>
-                        <span class="text-white fw-bold" style="font-size: 16px;">DASHBOARD</span>
+                        <span class="text-white fw-bold" style="font-size: 18px;">DASHBOARD</span>
                     </div>
                     <div class="d-md-none text-white fw-bold ms-2" style="font-size: 16px;">IRA Monitoring Network</div>
                 </div>
                 <div class="d-flex align-items-center">
                      <span class="navbar-clock-desktop text-muted small me-3"><i class="far fa-clock me-1"></i> <span id="clock"></span></span>
-                     <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center text-white" style="width: 32px; height: 32px; font-size: 13px;">AD</div>
+                     <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center text-white" style="width: 35px; height: 35px; font-size: 14px;">AD</div>
                 </div>
             </nav>
             <div class="content-spacer"></div>
             <div class="container-fluid px-4">
-                <!-- ROW 1: Performance + Temperature Chart -->
-                <div class="row mb-4">
-                    <!-- Performance Card -->
-                    <div class="col-lg-4 mb-3">
-                        <div class="dashboard-card">
-                            <div class="card-header-custom">
-                                <div>
-                                    <div class="card-title">Performance</div>
-                                    <div class="card-subtitle">Local Server Resources</div>
-                                </div>
-                                <span class="badge-live">LIVE</span>
+                <div class="row mb-3"><div class="col-12"><h4 class="text-white fw-bold"></h4></div></div>
+                <div class="row">
+                    <div class="col-12 col-lg-5 col-xl-4 mb-3">
+                        <div class="tm-widget-card" id="perf-widget">
+                            <div class="tm-header d-flex justify-content-between align-items-start">
+                                <div><div class="tm-title">Performance</div><div class="tm-subtitle">Local Server Resources</div></div>
+                                <span class="badge bg-success bg-opacity-75 text-white" id="live-badge" style="font-size: 10px;">LIVE</span>
                             </div>
-                            <div class="card-body p-0">
-                                <div class="perf-item perf-cpu">
-                                    <div>
-                                        <span class="perf-label">CPU</span>
-                                        <span class="perf-value">-<span class="perf-unit"> Util</span></span>
+                            <div class="tm-body">
+                                <div class="tm-item accent-cpu">
+                                    <div class="d-flex justify-content-between">
+                                        <div><span class="tm-label">CPU</span><span class="tm-value"><span id="cpu-val">-</span> <span class="tm-sub-value" id="cpu-unit">Util</span></span></div>
+                                        <div class="tm-graph-box"><div class="tm-bar" id="cpu-bar-1" style="background:#0078d7; height: 2px;"></div></div>
                                     </div>
-                                    <div class="perf-bar-box"><div class="perf-bar" style="background: var(--accent-blue); height: 2px;"></div></div>
                                 </div>
-                                <div class="perf-item perf-ram">
-                                    <div>
-                                        <span class="perf-label">Memory</span>
-                                        <span class="perf-value">- / -</span>
+                                <div class="tm-item accent-ram">
+                                    <div class="d-flex justify-content-between">
+                                        <div><span class="tm-label">Memory</span><span class="tm-value"><span id="ram-text">- / -</span></span></div>
+                                        <div class="tm-graph-box"><div class="tm-bar" id="ram-bar" style="background:#8a2be2; height: 2px;"></div></div>
                                     </div>
-                                    <div class="perf-bar-box"><div class="perf-bar" style="background: var(--accent-purple); height: 2px;"></div></div>
                                 </div>
-                                <div class="perf-item perf-disk">
-                                    <div>
-                                        <span class="perf-label">Disk Activity</span>
-                                        <span class="perf-value">0%<span class="perf-unit"> Active</span></span>
+                                <div class="tm-item accent-disk">
+                                    <div class="d-flex justify-content-between">
+                                        <div><span class="tm-label">Disk Activity</span><span class="tm-value"><span id="disk-val">0%</span> <span class="tm-sub-value" id="disk-unit">Active</span></span></div>
+                                        <div class="tm-graph-box"><div class="tm-bar" id="disk-bar" style="background:#28a745; height: 2px;"></div></div>
                                     </div>
-                                    <div class="perf-bar-box"><div class="perf-bar" style="background: var(--accent-green); height: 2px;"></div></div>
                                 </div>
-                                <div class="perf-item perf-gpu">
-                                    <div>
-                                        <span class="perf-label">GPU</span>
-                                        <span class="perf-value">-</span>
+                                <div class="tm-item accent-gpu">
+                                    <div class="d-flex justify-content-between">
+                                        <div style="max-width: 65%;"><span class="tm-label">GPU</span><span class="tm-value text-truncate d-block" style="font-size:11px;" id="gpu-name">-</span></div>
+                                        <div class="tm-graph-box"><div class="tm-bar" style="background:#d9534f; height:2px;"></div></div>
                                     </div>
-                                    <div class="perf-bar-box"><div class="perf-bar" style="background: var(--accent-red); height: 2px;"></div></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tm-widget-card">
+                            <div class="tm-header"><div class="tm-title">Service Status</div><div class="tm-subtitle">Health Check</div></div>
+                            <div class="tm-body">
+                                <div class="tm-item accent-status">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div><i class="fas fa-network-wired text-muted mr-2" style="width:20px"></i><span class="tm-label">Tshark Sniffer</span></div>
+                                        <div class="text-end" id="status-tshark"><span class="text-danger fw-bold" style="font-size: 0.9rem;"><span class="status-dot" style="background-color:#dc3545; display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:5px;"></span>Stopped</span></div>
+                                    </div>
+                                </div>
+                                <div style="border-top: 1px dashed #333; margin: 0;"></div>
+                                <div class="tm-item accent-status">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div><i class="fab fa-telegram-plane text-info mr-2" style="width:20px"></i><span class="tm-label">Telegram Bot</span></div>
+                                        <div class="text-end" id="status-bot"><span class="text-danger fw-bold" style="font-size: 0.9rem;"><span class="status-dot" style="background-color:#dc3545; display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:5px;"></span>Stopped</span></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-
-                    <!-- Temperature Chart -->
-                    <div class="col-lg-8 mb-3">
-                        <div class="dashboard-card" style="height: 100%; min-height: 280px;">
-                            <div class="card-header-custom">
-                                <div>
-                                    <div class="card-title">Server Temperature</div>
-                                    <div class="card-subtitle">CPU Thermal Monitor (°C)</div>
-                                </div>
-                            </div>
-                            <div class="p-3" style="height: calc(100% - 50px);">
-                                <canvas id="tempChart" style="max-height: 100%; width: 100%;"></canvas>
+                    <div class="col-12 col-lg-7 col-xl-8">
+                        <div class="tm-widget-card d-flex flex-column chart-wrapper">
+                            <div class="tm-header"><div><div class="tm-title">Server Temperature</div><div class="tm-subtitle">CPU Thermal Monitor (°C)</div></div></div>
+                            <div class="flex-grow-1 p-3" style="background-color: #15161d; position: relative; min-height: 0; overflow: hidden;">
+                                <canvas id="serverTempChart" style="max-height: 100%; width: 100%;"></canvas>
                             </div>
                         </div>
                     </div>
                 </div>
-
-                <!-- ROW 2: Service Status -->
-                <div class="row mb-4">
-                    <div class="col-lg-4 mb-3">
-                        <div class="dashboard-card">
-                            <div class="card-header-custom">
-                                <div>
-                                    <div class="card-title">Service Status</div>
-                                    <div class="card-subtitle">Health Check</div>
-                                </div>
-                            </div>
-                            <div class="card-body p-0">
-                                <div class="service-item">
-                                    <div class="d-flex align-items-center">
-                                        <div class="service-icon text-muted"><i class="fas fa-network-wired"></i></div>
-                                        <span class="service-label">Tshark Sniffer</span>
-                                    </div>
-                                    <div><span class="status-stopped"><span class="status-dot stopped"></span>Stopped</span></div>
-                                </div>
-                                <div class="service-item">
-                                    <div class="d-flex align-items-center">
-                                        <div class="service-icon text-info"><i class="fab fa-telegram-plane"></i></div>
-                                        <span class="service-label">Telegram Bot</span>
-                                    </div>
-                                    <div><span class="status-stopped"><span class="status-dot stopped"></span>Stopped</span></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-8 mb-3">
-                        <!-- Spacer for alignment -->
-                    </div>
-                </div>
-
-                <!-- ROW 3: Server Status Table -->
                 <div class="row">
                     <div class="col-12">
-                        <div class="dashboard-card">
-                            <div class="card-header-custom">
-                                <div>
-                                    <div class="card-title">Server Status</div>
-                                    <div class="card-subtitle">Cluster Availability</div>
-                                </div>
-                                <div class="text-secondary">
-                                    <a href="management.html" class="text-secondary small text-decoration-none"><i class="fas fa-cog me-1"></i> Manage</a>
-                                </div>
+                        <div class="tm-widget-card">
+                            <div class="tm-header d-flex justify-content-between align-items-center">
+                                <div><div class="tm-title">Server Status</div><div class="tm-subtitle">Cluster Availability</div></div>
+                                <div class="text-secondary"><a href="management.html" class="text-secondary small text-decoration-none"><i class="fas fa-cog me-1"></i> Manage</a></div>
                             </div>
-                            <div class="table-responsive">
-                                <table class="server-table mb-0">
-                                    <thead>
+                            <div class="p-0 table-responsive">
+                                <table class="table table-dark table-hover mb-0 align-middle" style="background-color: transparent;">
+                                    <thead style="background-color: #202229; color: #787f8a; font-size: 12px; text-transform: uppercase;">
                                         <tr>
-                                            <th>Server Name</th>
-                                            <th>IP / Domain</th>
-                                            <th>Status</th>
-                                            <th>Load</th>
-                                            <th>Signal</th>
+                                            <th class="py-3 px-4 fw-normal">Server Name</th>
+                                            <th class="fw-normal col-mobile-hide">IP / Domain</th>
+                                            <th class="fw-normal">Status</th>
+                                            <th class="fw-normal">Load</th>
+                                            <th class="fw-normal col-mobile-hide">Signal</th>
                                         </tr>
                                     </thead>
-                                    <tbody id="server-list">
-                                        <tr>
-                                            <td>
-                                                <div class="d-flex align-items-center">
-                                                    <div class="server-icon"><i class="fas fa-cloud text-info" style="font-size: 14px;"></i></div>
-                                                    <span class="fw-bold">Own Cloud</span>
-                                                </div>
-                                            </td>
-                                            <td><a href="#" class="text-decoration-none" style="color: #3b82f6;">192.168.3.250</a></td>
-                                            <td><span class="badge-online">ONLINE</span></td>
-                                            <td class="fw-bold">1 ms</td>
-                                            <td>
-                                                <div class="signal-bars">
-                                                    <div class="signal-bar" style="height: 4px;"></div>
-                                                    <div class="signal-bar" style="height: 7px;"></div>
-                                                    <div class="signal-bar" style="height: 10px;"></div>
-                                                    <div class="signal-bar" style="height: 13px;"></div>
-                                                    <div class="signal-bar" style="height: 16px;"></div>
-                                                </div>
-                                            </td>
-                                        </tr>
+                                    <tbody id="server-list" style="border-top: none;">
+                                        <tr><td colspan="5" class="text-center text-muted py-3">Server data will be displayed here</td></tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -442,7 +182,6 @@
             </div>
         </div>
     </div>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         // Clock
@@ -472,20 +211,34 @@
             }
         });
 
-        // Temperature Chart
-        const ctx = document.getElementById('tempChart').getContext('2d');
+        window.addEventListener("scroll", function() {
+            let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            if (scrollTop > lastScrollTop && scrollTop > 50) navbar.classList.add("navbar-hidden");
+            else navbar.classList.remove("navbar-hidden");
+            lastScrollTop = scrollTop;
+        });
+
+        // Chart
+        const ctx = document.getElementById('serverTempChart').getContext('2d');
+        let gradient = ctx.createLinearGradient(0, 0, 0, 400);
+        gradient.addColorStop(0, 'rgba(0, 120, 215, 0.3)');
+        gradient.addColorStop(1, 'rgba(0, 120, 215, 0)');
+
         new Chart(ctx, {
             type: 'line',
             data: {
-                labels: ['00:00', '01:00', '02:00', '03:00', '04:00', '05:00', '06:00', '07:00', '08:00', '09:00', '10:00', '11:00'],
+                labels: [],
                 datasets: [{
                     label: 'Temperature (°C)',
-                    data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-                    borderColor: '#3b82f6',
-                    backgroundColor: 'transparent',
-                    borderWidth: 1,
+                    data: [],
+                    borderColor: '#0078d7',
+                    backgroundColor: gradient,
+                    borderWidth: 2,
                     pointRadius: 0,
-                    tension: 0.4
+                    pointHoverRadius: 4,
+                    fill: true,
+                    tension: 0.4,
+                    cubicInterpolationMode: 'monotone'
                 }]
             },
             options: {
@@ -493,17 +246,8 @@
                 maintainAspectRatio: false,
                 plugins: { legend: { display: false } },
                 scales: {
-                    x: {
-                        grid: { color: '#2d2e3a', drawBorder: false },
-                        ticks: { color: '#5a5b68', font: { size: 10 } }
-                    },
-                    y: {
-                        grid: { color: '#2d2e3a', drawBorder: false },
-                        ticks: { color: '#5a5b68', font: { size: 10 } },
-                        min: 0,
-                        max: 60,
-                        stepSize: 10
-                    }
+                    x: { grid: { color: '#2d303e', display: true }, ticks: { color: '#888', autoSkip: true, maxTicksLimit: 6, maxRotation: 0 } },
+                    y: { grid: { color: '#2d303e' }, ticks: { color: '#888' }, beginAtZero: true, suggestedMax: 60 }
                 },
                 animation: false
             }
